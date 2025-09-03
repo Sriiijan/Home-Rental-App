@@ -93,3 +93,27 @@
     }
   }
 }
+/* Add these styles to your Register.scss or CSS file */
+
+.register-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 44px; /* Ensure button has consistent height */
+  /* Add your existing button styles here */
+}
+
+.spinner {
+  width: 20px; /* Made smaller to fit better in button */
+  height: 20px;
+  border: 3px solid #f3f3f3; /* Light gray border */
+  border-top: 3px solid #3498db; /* Blue top border for spinning effect */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  /* Remove justify-content from here since it's not needed */
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
