@@ -5,10 +5,30 @@ import {uploadOnCloudinary} from "../utils/cloudinary.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
 import fs from "fs"
 
+// Helper function to safely delete local file
+const deleteLocalFile = (filePath) => {
+    try {
+        if (filePath && fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+            console.log(`Local file deleted: ${filePath}`);
+        }
+    } catch (error) {
+        console.error(`Error deleting local file: ${filePath}`, error);
+    }
+};
+
 const registerUser= asyncHandler(async (req, res) => {
     const {firstName, lastName, email, password}= req.body;
 
+    const profileImageLocalPath= req.file?.path;
+
+    if(!profileImageLocalPath){
+        throw new ApiError(400, "Profile Image is missing");
+    }
+
     if(!firstName || !lastName || !email || !password) {
+        // Clean up uploaded file before throwing error
+        deleteLocalFile(profileImageLocalPath);
         throw new ApiError(400, "All fields are required")
     }
 
@@ -17,18 +37,12 @@ const registerUser= asyncHandler(async (req, res) => {
     // console.log("USER: ", existedUser)
 
     if(existedUser) {
-        // fs.unlinkSync(localFilePath)
+        // Clean up uploaded file before throwing error
+        deleteLocalFile(profileImageLocalPath);
         throw new ApiError(409, "User with email already exist");
     }
 
-    const profileImageLocalPath= req.file?.path;
-
     // console.log("LOCAL PATH: ", profileImageLocalPath);
-    
-
-    if(!profileImageLocalPath){
-        throw new ApiError(400, "Profile Image is missing");
-    }
 
     const profileImage= await uploadOnCloudinary(profileImageLocalPath);
 
