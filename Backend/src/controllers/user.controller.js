@@ -17,6 +17,30 @@ const deleteLocalFile = (filePath) => {
     }
 };
 
+// Helper func to generate token
+const generateToken= async (userId) => {
+    try {
+        const user= await User.findById(userId);
+
+        if(!user) {
+            throw new ApiError(404, "User not found")
+        }
+        const token= user.generateToken();
+
+        // console.log("TOKEN: ",token)
+
+        user.token= token
+
+        await user.save({
+            validateBeforeSave: false
+        })
+
+        return {token}
+    } catch (error) {
+        throw new ApiError(500, "something went wrong while generating token")
+    }
+}
+
 const registerUser= asyncHandler(async (req, res) => {
     const {firstName, lastName, email, password}= req.body;
 
@@ -79,6 +103,38 @@ const registerUser= asyncHandler(async (req, res) => {
     )    
 });
 
+const loginUser= asyncHandler(async (req, res) => {
+    const {email, password}= req.body;
+
+    if(!email) {
+        throw new ApiError(400, "username or email is required");
+    }
+
+    const user= await User.findOne({email});
+
+    if(!user) {
+        throw new ApiError(404, "User doesn't exist");
+    }
+
+    const isPasswordValid= await user.isPasswordCorrect(password);
+
+    if(!isPasswordValid) {
+        throw new ApiError(400, "Invalid Credentials")
+    }
+    const {token}= await generateToken(user._id)
+
+    const loggedInUser= await User.findById(user._id).select("-password -token");
+
+    return res.status(200).json(
+        new ApiResponse(200,
+            {
+                user: loggedInUser, token
+            }, "User Loged In Successfully")
+    )
+
+})
+
 export {
-    registerUser
+    registerUser,
+    loginUser
 }

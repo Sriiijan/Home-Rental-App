@@ -1,14 +1,14 @@
-@import "./Variables.module.scss";
-@import "./Breakpoints.scss";
+@import "./variables.module.scss";
+@import "./breakpoints.scss";
 
-.register {
+.login {
   width: 100vw;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  background: url("https://images.pexels.com/photos/4275885/pexels-photo-4275885.jpeg") center;
+  background: url("https://images.pexels.com/photos/3567189/pexels-photo-3567189.jpeg") center;
   background-size: cover;
 
   &_content {
@@ -53,21 +53,6 @@
         }
       }
 
-      label {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 9px;
-        cursor: pointer;
-        color: white;
-        font-size: 14px;
-
-        img {
-          width: 25px;
-        }
-      }
-
       button {
         margin-top: 15px;
 
@@ -80,40 +65,29 @@
       }
     }
 
+    &_google {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
     a {
       text-decoration: none;
       color: white;
-      font-size: 13px;
-      margin-top: 10px;
+      font-size: 17px;
+      font-weight: 600;
       text-align: center;
 
       &:hover {
         text-decoration: underline;
       }
     }
+
+    p {
+      color: white;
+      font-size: 13px;
+      text-align: center;
+    }
   }
-}
-/* Add these styles to your Register.scss or CSS file */
-
-.register-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 44px; /* Ensure button has consistent height */
-  /* Add your existing button styles here */
-}
-
-.spinner {
-  width: 20px; /* Made smaller to fit better in button */
-  height: 20px;
-  border: 3px solid #f3f3f3; /* Light gray border */
-  border-top: 3px solid #3498db; /* Blue top border for spinning effect */
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  /* Remove justify-content from here since it's not needed */
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
 }
