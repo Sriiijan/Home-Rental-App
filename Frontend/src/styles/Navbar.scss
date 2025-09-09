@@ -2,33 +2,34 @@
 @import "./breakpoints.scss";
 
 .navbar {
-  padding: 10px 60px;
+  padding: 0px 60px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: relative;
 
   @include sm {
-    padding: 10px 20px;
+    padding: 8px 20px;
   }
 
   img {
-    width: 100px;
+    width: 80px;
     cursor: pointer;
   }
 
   &_search {
     border: 1px solid $grey;
-    border-radius: 30px;
-    height: 50px;
-    padding: 0px 20px;
+    border-radius: 25px;
+    height: 40px;
+    padding: 0px 18px;
     display: flex;
-    gap: 40px;
+    gap: 30px;
     align-items: center;
 
     input {
       border: none;
       outline: none;
+      font-size: 14px;
     }
 
     &:hover {
@@ -50,6 +51,7 @@
       color: $blue;
       font-weight: 700;
       cursor: pointer;
+      font-size: 14px;
 
       &:hover {
         color: $pinkred;
@@ -61,14 +63,14 @@
     }
 
     &_account {
-      height: 50px;
+      height: 40px;
       display: flex;
       align-items: center;
-      padding: 0 10px;
+      padding: 0 12px;
       border: 1px solid $grey;
-      border-radius: 30px;
+      border-radius: 25px;
       display: flex;
-      gap: 10px;
+      gap: 8px;
       background-color: white;
       cursor: pointer;
 
@@ -77,8 +79,9 @@
       }
 
       img {
-        width: 40px;
-        height: 40px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
       }
     }
 
@@ -86,7 +89,7 @@
       position: absolute;
       background-color: white;
       right: 60px;
-      top: 80px;
+      top: 65px;
       display: flex;
       flex-direction: column;
       width: 200px;

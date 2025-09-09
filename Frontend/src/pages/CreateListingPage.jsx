@@ -6,8 +6,13 @@ import variables from "../styles/Variables.module.scss";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { IoIosImages } from "react-icons/io";
 import { BiTrash } from "react-icons/bi";
+import {useSelector} from "react-redux";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const CreateListingPage = () => {
+  const navigate= useNavigate();
+
   const [category, setCategory] = useState("");
   const [type, setType] = useState("");
 
@@ -84,13 +89,66 @@ const CreateListingPage = () => {
         [name]: value
     })
   }
-  //   console.log(formDescription)
+    console.log(amenities)
+
+  const creatorId= useSelector((state) => state.user._id)
+
+  const handlePost= async (e) => {
+    e.preventDefault();
+
+    try {
+      const listingForm= new FormData();
+
+      listingForm.append("creator", creatorId),
+      listingForm.append("category", category),
+      listingForm.append("type", type),
+      listingForm.append("address", formLocation.address),
+      listingForm.append("city", formLocation.city),
+      listingForm.append("pincode", formLocation.pincode),
+      listingForm.append("state", formLocation.state),
+      listingForm.append("country", formLocation.country),
+      listingForm.append("guestCount", guestCount);
+      listingForm.append("bedroomCount", bedroomCount);
+      listingForm.append("bedCount", bedCount);
+      listingForm.append("bathroomCount", bathroomCount);
+      listingForm.append("amenities", amenities);
+      listingForm.append("title", formDescription.title);
+      listingForm.append("description", formDescription.description);
+      listingForm.append("highlight", formDescription.highlight);
+      listingForm.append("highlightDesc", formDescription.highlightDesc);
+      listingForm.append("price", formDescription.price);
+
+      photos.forEach((photo) => {
+        listingForm.append("listingPhotos", photo)
+      })
+
+      const config = {
+          headers: {
+              "Content-Type": "multipart/form-data",
+          },
+      };
+
+      const response = await axios.post(
+          `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api/v1/listing/create`,
+          listingForm,
+          config
+      );
+
+      if(response) {
+        navigate('/');
+      }
+
+    }
+    catch (error) {
+      console.log("Publish listing error", error.message)
+    }
+  }
 
   return (
     <div>
       <div className="create-listing">
         <h1>Publish Your Place</h1>
-        <form>
+        <form onSubmit={handlePost}>
           <div className="create-listing_step1">
             <h2>Step 1: Tell us about your place</h2>
             <hr />
@@ -156,7 +214,7 @@ const CreateListingPage = () => {
               <div className="location">
                 <p>Pincode</p>
                 <input
-                  type="text"
+                  type="number"
                   placeholder="Pincode"
                   name="pincode"
                   value={formLocation.pincode}
@@ -307,10 +365,10 @@ const CreateListingPage = () => {
               {facilities?.map((item, index) => (
                 <div
                   className={`facility ${
-                    amenities.includes(item) ? "selected" : ""
+                    amenities.includes(item.name) ? "selected" : ""
                   }`}
                   key={index}
-                  onClick={() => handleSelectAminities(item)}
+                  onClick={() => handleSelectAminities(item.name)}
                 >
                   <div>{item.icon}</div>
                   <p>{item.name}</p>
@@ -450,6 +508,10 @@ const CreateListingPage = () => {
               />
             </div>
           </div>
+
+          <button className="submit_btn" type="submit">
+            CREATE YOUR LISTING
+          </button>
         </form>
       </div>
     </div>
