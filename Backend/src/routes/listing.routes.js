@@ -1,6 +1,6 @@
 import { Router } from "express";
 import {upload} from "../middlewares/multer.middleware.js"
-import {createListing, getListings} from "../controllers/listing.controller.js"
+import {createListing, getListings, getListingDetails} from "../controllers/listing.controller.js"
 
 const router= Router();
 
@@ -11,7 +11,7 @@ router.route("/create").post(
     ]),
     createListing
 )
-
 router.route("/").get(getListings)
+router.route("/:listindId").get(getListingDetails)
 
 export default router;

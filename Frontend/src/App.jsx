@@ -5,6 +5,7 @@ import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import Navbar from './components/Header/Navbar';
 import CreateListingPage from './pages/CreateListingPage';
+import ListingDetailsPage from './pages/ListingDetailsPage.jsx'
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
           <Route path='/register' element={<RegisterPage />} />
           <Route path='/login' element={<LoginPage />} />
           <Route path='/create-listing' element={<CreateListingPage />} />
+          <Route path='/properties/:listingId' element={<ListingDetailsPage />} />
         </Routes>
       </BrowserRouter>
     </>

@@ -70,6 +70,7 @@ const Listings = () => {
                 key={listing._id || index}
                 listingId={listing._id}
                 creator={listing.creator}
+                title={listing.title}
                 listingPhotos={listing.listingPhotos}
                 city={listing.city}
                 state={listing.state}
