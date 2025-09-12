@@ -54,18 +54,18 @@ const Navbar = () => {
 
         {dropdownMenu && !user && (
           <div className="navbar_right_accountmenu">
-            <Link to={"/login"}> Log In</Link>
-            <Link to={"/register"}>Register</Link>
+            <Link to={"/login"} onClick={() => setDropdownMenu(false)}> Log In</Link>
+            <Link to={"/register"} onClick={() => setDropdownMenu(false)}>Register</Link>
           </div>
         )}
 
         {dropdownMenu && user && (
           <div className="navbar_right_accountmenu">
-            <Link to="">Trip List</Link>
-            <Link to="">Wish List</Link>
-            <Link to="">Property List</Link>
-            <Link to="">Reservation List</Link>
-            <Link to="">Become A Host</Link>
+            <Link to={`/trips`} onClick={() => setDropdownMenu(false)}>Trip List</Link>
+            <Link to="/wishlists" onClick={() => setDropdownMenu(false)}>Wish List</Link>
+            <Link to="/propertyList" onClick={() => setDropdownMenu(false)}>Property List</Link>
+            <Link to="/reservationList" onClick={() => setDropdownMenu(false)}>Reservation List</Link>
+            <Link to="/create-listing" onClick={() => setDropdownMenu(false)}>Become A Host</Link>
 
             <Link to="/login" onClick={() => {dispatch(setLogout())}}>Log Out</Link>
           </div>

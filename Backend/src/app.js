@@ -20,9 +20,11 @@ app.use(express.static('public'))
 // routes import
 import userRouter from "./routes/user.routes.js"
 import listingRouter from './routes/listing.routes.js'
+import bookingRouter from './routes/booking.routes.js'
 
 // routes declaration
 app.use("/api/v1/users", userRouter)
 app.use("/api/v1/listing", listingRouter)
+app.use("/api/v1/booking", bookingRouter)
 
 export { app }
