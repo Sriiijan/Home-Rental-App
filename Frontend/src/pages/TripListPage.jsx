@@ -44,6 +44,7 @@ const TripListPage = () => {
               key={listingId?._id || index}
               title={listingId?.title}
               listingId={listingId?._id}
+              category={listingId?.category}
               listingPhotos={listingId?.listingPhotos}
               city={listingId?.city}
               state={listingId?.state}
@@ -60,6 +61,7 @@ const TripListPage = () => {
               })}
               totalPrice={totalPrice}
               booking={true}
+              reservation={false}
             />
           ))
         ) : (

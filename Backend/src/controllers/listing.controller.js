@@ -5,6 +5,14 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
+const addPropertyToUser = async (userId, propertyId) => {
+  await User.findByIdAndUpdate(
+    userId,
+    { $push: { propertyList: propertyId } },
+    { new: true }
+  );
+};
+
 // ✅ Create new listing
 const createListing = asyncHandler(async (req, res) => {
   const {
@@ -32,6 +40,17 @@ const createListing = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Required fields are missing");
   }
 
+  // ✅ Ensure amenities is always an array of strings
+  let amenitiesArray;
+  try {
+    amenitiesArray = Array.isArray(amenities)
+      ? amenities
+      : JSON.parse(amenities);
+  } catch (err) {
+    throw new ApiError(400, "Invalid amenities format");
+  }
+
+  // ✅ Handle images
   let listingPhotos = [];
   if (req.files && Object.keys(req.files).length > 0) {
     const files = req.files.images || req.files.listingPhotos || [];
@@ -46,6 +65,7 @@ const createListing = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Images are required");
   }
 
+  // ✅ Create listing
   const newListing = await Listing.create({
     creator,
     category,
@@ -59,7 +79,7 @@ const createListing = asyncHandler(async (req, res) => {
     bedroomCount: parseInt(bedroomCount) || 1,
     bedCount: parseInt(bedCount) || 1,
     bathroomCount: parseInt(bathroomCount) || 1,
-    amenities,
+    amenities: amenitiesArray,   // ✅ FIXED
     title,
     description,
     highlight,
@@ -79,6 +99,7 @@ const createListing = asyncHandler(async (req, res) => {
     .status(201)
     .json(new ApiResponse(201, createdListing, "Listing created successfully"));
 });
+
 
 // ✅ Get all listings (with optional category filter)
 const getListings = asyncHandler(async (req, res) => {
@@ -182,11 +203,42 @@ const deleteListing = asyncHandler(async (req, res) => {
   );
 });
 
-// Export the functions
+const searchListings= asyncHandler(async (req, res) => {
+  const {search}= req.params;
+  
+  if(!search) {
+    throw new ApiError(400, "search item is required");
+  }
+
+  let listings= [];
+
+  if(search == 'all') {
+    listings= await Listing.find().populate('creator')
+  }
+  else {
+    listings = await Listing.find({
+      $or: [
+        { category: { $regex: search, $options: "i" } },
+        { title: { $regex: search, $options: "i" } },
+        { address: { $regex: search, $options: "i" } },
+        { city: { $regex: search, $options: "i" } },
+        { state: { $regex: search, $options: "i" } },
+        { country: { $regex: search, $options: "i" } },
+        { category: { $regex: search, $options: "i" } },
+      ]
+    }).populate('creator');
+  }
+
+  return res.status(200).json(
+    new ApiResponse(200, listings, "Seraching Done")
+  )
+})
+
 export {
   getUserProperties,
   createListing,
   getListings,
   getListingDetails,
-  deleteListing
+  deleteListing,
+  searchListings
 };

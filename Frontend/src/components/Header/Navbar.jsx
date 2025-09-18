@@ -5,7 +5,7 @@ import {Person, Search, Menu} from '@mui/icons-material'
 import variables from '../../styles/Variables.module.scss';
 import {useSelector, useDispatch} from 'react-redux'
 import "../../styles/Navbar.scss"
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import { useState } from 'react';
 import {setLogout} from '../../redux/authSlice.js'
 
@@ -13,6 +13,10 @@ const Navbar = () => {
   const user = useSelector((state) => state.user)
   const [dropdownMenu, setDropdownMenu] = useState(false);
   const dispatch= useDispatch();
+
+  const navigate= useNavigate();
+
+  const [serach, setSearch]= useState("")
   
   return (
     <div className='navbar'>
@@ -21,10 +25,16 @@ const Navbar = () => {
       </a>
 
       <div className='navbar_search'>
-        <input type='text' placeholder='Search...' />
-        <IconButton>
-          <Search sx={{color: variables.pinkred}}/>
-        </IconButton>
+        <input
+          type='text'
+          placeholder='Search...'
+          value={serach}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <IconButton onClick={() => navigate(`/properties/search/${serach}`)}>
+  <Search sx={{ color: variables.pinkred }} />
+</IconButton>
+
       </div>
 
       <div className='navbar_right'>
@@ -67,7 +77,15 @@ const Navbar = () => {
             <Link to="/reservationList" onClick={() => setDropdownMenu(false)}>Reservation List</Link>
             <Link to="/create-listing" onClick={() => setDropdownMenu(false)}>Become A Host</Link>
 
-            <Link to="/login" onClick={() => {dispatch(setLogout())}}>Log Out</Link>
+            <Link
+             to="/login"
+             onClick={() => {
+              dispatch(setLogout())
+              setDropdownMenu(false);
+            } }
+            >
+              Log Out
+            </Link>
           </div>
         )}
 

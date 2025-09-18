@@ -223,24 +223,22 @@ const ListingDetailsPage = () => {
           <h2>What this place offers</h2>
           <div className="amenities">
             {listing.amenities && listing.amenities.length > 0 ? (
-              listing.amenities[0]
-                .split(",")
-                .filter(name => name.trim()) // Remove empty strings
-                .map((name, index) => {
-                  const facility = facilities.find((f) => f.name === name.trim());
-                  return (
-                    <div className="facility" key={index}>
-                      <div className="facility_icon">
-                        {facility?.icon || '•'}
-                      </div>
-                      <p>{name.trim()}</p>
+              listing.amenities.map((name, index) => {
+                const facility = facilities.find((f) => f.name === name.trim());
+                return (
+                  <div className="facility" key={index}>
+                    <div className="facility_icon">
+                      {facility?.icon || '•'}
                     </div>
-                  );
-                })
+                    <p>{name.trim()}</p>
+                  </div>
+                );
+              })
             ) : (
               <p>No amenities listed</p>
             )}
           </div>
+
 
           <div className="booking-section">
             <h2>How long do you want to stay?</h2>

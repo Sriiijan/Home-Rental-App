@@ -21,6 +21,9 @@ const ListingCard = ({
   endDate,
   totalPrice,
   booking,
+  reservation,
+  customerFirstName,
+  customerLastName
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -126,7 +129,11 @@ const ListingCard = ({
     <div 
       className="listing-card"
       onClick={() => {
-        navigate(`/properties/${listingId}`);
+        if (reservation) {
+          // navigate(`/reservations/${reservation._id}`); // Reservation page
+        } else {
+          navigate(`/properties/${listingId}`); // Property page
+        }
       }}
     >
       <div className="slider-container">
@@ -174,6 +181,11 @@ const ListingCard = ({
         {city || 'Unknown'}, {state || 'Unknown'}, {country || 'Unknown'}
       </h3>
       <p>{category || 'Uncategorized'}</p>
+      {reservation ? (
+        <p>Reserverd by {customerFirstName} {customerLastName}</p> 
+      ) : (
+        <></>
+      )}
 
       {booking ? (
         <>

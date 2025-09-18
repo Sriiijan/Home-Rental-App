@@ -1,5 +1,5 @@
 import React from 'react'
-import { categories } from '../data.jsx'  // Make sure this path is correct
+import { categories } from '../data.jsx'
 import { Link } from 'react-router-dom'
 import '../styles/Categories.scss'
 
@@ -15,12 +15,12 @@ const Categories = () => {
 
       <div className="categories_list">
         {categories?.slice(1, 7).map((category, index) => (
-          <Link to={`/category/${category.label.toLowerCase()}`} key={index}>
+          <Link to={`/properties/search/${category.label.toLowerCase()}`} key={index}>
             <div className="category">
               <img src={category.img} alt={category.label} />
               <div className="overlay"></div>
-              <div className="category_text"> {/* Fixed typo: categoty -> category */}
-                <div className="category_icon">{category.icon}</div> {/* Better class name */}
+              <div className="category_text">
+                <div className="category_icon">{category.icon}</div>
                 <p>{category.label}</p>
               </div>
             </div>

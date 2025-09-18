@@ -53,6 +53,8 @@ const ReservationPage = () => {
               key={res._id}
               listingId={res.listingId?._id}
               creator={res.hostId?._id}
+              customerFirstName={res.customerId?.firstName}
+              customerLastName={res.customerId?.lastName}
               title={res.listingId?.title}
               listingPhotos={res?.listingId?.listingPhotos}
               city={res.listingId?.city}
@@ -71,6 +73,7 @@ const ReservationPage = () => {
               })}
               totalPrice={res.totalPrice}
               booking={true}
+              reservation={true}
             />
           ))}
             </div>

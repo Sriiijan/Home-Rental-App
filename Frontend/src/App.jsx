@@ -11,6 +11,7 @@ import WishListPage from './pages/WishListPage.jsx';
 import PropertyListPage from './pages/PropertyListPage.jsx';
 import Footer from './components/Footer/Footer.jsx';
 import ReservationPage from './pages/ReservationPage.jsx';
+import SearchPage from './pages/SearchPage.jsx';
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path='/' element={<HomePage />} />
+          <Route path='/properties/search/:search' element={<SearchPage />} />
           <Route path='/register' element={<RegisterPage />} />
           <Route path='/login' element={<LoginPage />} />
           <Route path='/create-listing' element={<CreateListingPage />} />
