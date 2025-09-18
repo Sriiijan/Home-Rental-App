@@ -12,6 +12,7 @@ import PropertyListPage from './pages/PropertyListPage.jsx';
 import Footer from './components/Footer/Footer.jsx';
 import ReservationPage from './pages/ReservationPage.jsx';
 import SearchPage from './pages/SearchPage.jsx';
+import UserDetailsPage from './pages/UserDetailsPage.jsx';
 
 function App() {
 
@@ -30,6 +31,8 @@ function App() {
           <Route path='/wishlists' element={<WishListPage />} />
           <Route path='/propertyList' element={<PropertyListPage />} />
           <Route path='/reservationList' element={<ReservationPage />} />
+          <Route path='/user/:userId' element={<UserDetailsPage />} />
+          {/* <Route path='/cancel/:bookingId' element={< />} /> */}
         </Routes>
         <Footer />
       </BrowserRouter>

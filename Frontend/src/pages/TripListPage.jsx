@@ -28,10 +28,19 @@ const TripListPage = () => {
     }
   }
 
+  // Handler for when a booking is cancelled
+  const handleCancelBooking = (cancelledBookingId) => {
+    // Update Redux state by removing the cancelled booking
+    const updatedTripList = tripList.filter(trip => trip._id !== cancelledBookingId)
+    dispatch(setTripList(updatedTripList))
+  }
+
   useEffect(() => {
     if (userId) getTripList()
   }, [userId])
 
+  console.log(tripList);
+  
   return loading ? (
     <Loader />
   ) : (
@@ -39,9 +48,10 @@ const TripListPage = () => {
       <h1 className="title-list">Your Trip List</h1>
       <div className="list">
         {tripList?.length > 0 ? (
-          tripList.map(({ listingId, startDate, endDate, totalPrice }, index) => (
+          tripList.map(({ _id, listingId, startDate, endDate, totalPrice }, index) => (
             <ListingCard
               key={listingId?._id || index}
+              bookingId={_id}
               title={listingId?.title}
               listingId={listingId?._id}
               category={listingId?.category}
@@ -62,6 +72,7 @@ const TripListPage = () => {
               totalPrice={totalPrice}
               booking={true}
               reservation={false}
+              onCancelBooking={handleCancelBooking} // Add the callback
             />
           ))
         ) : (

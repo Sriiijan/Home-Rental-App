@@ -54,6 +54,8 @@ const PropertyListPage = () => {
                             key={propertyId?._id}
                             title={propertyId?.title}
                             listingId={propertyId?._id}
+                            category={propertyId?.category}
+                            type={propertyId?.type}
                             listingPhotos={propertyId?.listingPhotos}
                             city={propertyId?.city}
                             state={propertyId?.state}

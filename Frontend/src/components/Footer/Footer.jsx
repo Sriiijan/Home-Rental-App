@@ -27,7 +27,7 @@ const Footer = () => {
           <Email />
           <p>havenly@support.com</p>
         </div>
-        <img src="/assets/payment.png" alt="payment" />
+        {/* <img src="/assets/payment.png" alt="payment" /> */}
       </div>
     </div>
   )

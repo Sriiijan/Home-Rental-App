@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import "../styles/ListingCard.scss";
-import { MdArrowBackIosNew, MdArrowForwardIos, MdFavorite } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { MdArrowBackIosNew, MdArrowForwardIos, MdFavorite, MdDeleteForever } from "react-icons/md";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { setWishlist } from "../redux/authSlice";
 
 const ListingCard = ({
   listingId,
+  bookingId,
   creator,
   title,
-  listingPhotos = [], // Default empty array
+  listingPhotos = [],
   city,
   state,
   country,
@@ -23,14 +24,17 @@ const ListingCard = ({
   booking,
   reservation,
   customerFirstName,
-  customerLastName
+  customerLastName,
+  customerId,
+  onCancelBooking // New prop for handling booking cancellation
 }) => {
+  const [loading, setLoading] = useState(false); // Changed to false initially
+  const [isDeleting, setIsDeleting] = useState(false); // New state for deletion loading
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Safe photo handling
+  // Photos
   const photos = Array.isArray(listingPhotos) ? listingPhotos : [];
   const hasPhotos = photos.length > 0;
 
@@ -46,121 +50,124 @@ const ListingCard = ({
   const gotoNextSlide = (e) => {
     e.stopPropagation();
     if (hasPhotos) {
-      setCurrentIndex(
-        (prevIndex) => (prevIndex + 1) % photos.length
-      );
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % photos.length);
     }
   };
 
-  // Get user and wishlist from Redux state
+  // Redux state
   const user = useSelector((state) => state.user);
-  
-  // FIXED: Access wishList with capital L to match your backend
   const wishlist = user?.wishList || [];
 
-  // FIXED: Better wishlist checking
-  const isLiked = Array.isArray(wishlist) 
+  const isLiked = Array.isArray(wishlist)
     ? wishlist.some((item) => {
-        // Handle both populated objects and ObjectIds
-        const itemId = typeof item === 'object' ? item._id : item;
+        const itemId = typeof item === "object" ? item._id : item;
         return itemId?.toString() === listingId?.toString();
       })
     : false;
 
+  // Wishlist patch request
   const patchWishlist = async (e) => {
-    e.stopPropagation(); // Prevent card navigation
-    
+    e.stopPropagation();
+
     if (!user?._id) {
-      alert('Please login to add to wishlist');
+      alert("Please login to add to wishlist");
       return;
     }
 
     try {
-      console.log('Making wishlist request:', {
-        userId: user._id,
-        listingId,
-        url: `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api/v1/users/${user._id}/${listingId}`
-      });
-
       const response = await axios.patch(
-        `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api/v1/users/${user._id}/${listingId}`,
-        {}, // Empty body
+        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8000"}/api/v1/users/${user._id}/${listingId}`,
+        {},
         {
           headers: {
             "Content-Type": "application/json",
-            // Add authorization if you have token-based auth
-            ...(user.token && { "Authorization": `Bearer ${user.token}` })
+            ...(user.token && { Authorization: `Bearer ${user.token}` }),
           },
         }
       );
 
-      console.log('Wishlist response:', response.data);
-
-      // FIXED: Update Redux state with the correct data structure
       const data = response.data.data;
-      
-      // Update the entire user object or just the wishList
       if (data.user) {
-        // If backend returns full user, dispatch that
         dispatch(setWishlist(data.user.wishList));
       } else if (data.wishList) {
-        // If backend returns just wishList, dispatch that
         dispatch(setWishlist(data.wishList));
       }
-
     } catch (error) {
-      console.error('Wishlist update failed:', error);
-      
-      // Better error handling
-      if (error.response) {
-        console.error('Error response:', error.response.data);
-        alert(`Failed to update wishlist: ${error.response.data.message || 'Please try again.'}`);
-      } else if (error.request) {
-        console.error('Network error:', error.request);
-        alert('Network error. Please check your connection.');
-      } else {
-        console.error('Error:', error.message);
-        alert('Failed to update wishlist. Please try again.');
-      }
+      console.error("Wishlist update failed:", error);
+      alert("Failed to update wishlist. Please try again.");
     }
   };
-  
+
+  const cancelBooking = async (e) => {
+    e.stopPropagation();
+
+    if (!bookingId) {
+      console.log('No booking ID found');
+      return;
+    }
+
+    // Confirm cancellation
+    if (!window.confirm('Are you sure you want to cancel this booking?')) {
+      return;
+    }
+
+    setIsDeleting(true);
+
+    try {
+      const response = await axios.delete(
+        `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api/v1/booking/cancel/${bookingId}`
+      );
+
+      // Call parent callback to update the UI
+      if (onCancelBooking && typeof onCancelBooking === 'function') {
+        onCancelBooking(bookingId);
+      }
+      
+      // alert('Booking cancelled successfully!');
+      
+    } catch (error) {
+      console.error("Error while cancel booking:", error);
+      alert('Failed to cancel booking. Please try again.');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   return (
-    <div 
+    <div
       className="listing-card"
       onClick={() => {
-        if (reservation) {
-          // navigate(`/reservations/${reservation._id}`); // Reservation page
-        } else {
-          navigate(`/properties/${listingId}`); // Property page
+        if (!reservation) {
+          navigate(`/properties/${listingId}`);
         }
       }}
     >
+      {/* Slider */}
       <div className="slider-container">
         {hasPhotos ? (
-          <div className="slider" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
+          <div
+            className="slider"
+            style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+          >
             {photos.map((photo, index) => (
               <div key={index} className="slide">
-                <img 
-                  src={photo} 
-                  alt={`${title || 'listing'} photo ${index + 1}`}
-                  onError={(e) => {
-                    e.target.style.display = 'none'; // Hide broken images
-                  }}
+                <img
+                  src={photo}
+                  alt={`${title || "listing"} photo ${index + 1}`}
+                  onError={(e) => (e.target.style.display = "none")}
                 />
-                {/* Only show arrows if there are multiple photos */}
                 {photos.length > 1 && (
                   <>
                     <div className="prev-button">
-                      <MdArrowBackIosNew 
-                        style={{fontSize: "15px"}} 
-                        onClick={gotoPrevSlide} 
+                      <MdArrowBackIosNew
+                        style={{ fontSize: "15px" }}
+                        onClick={gotoPrevSlide}
                       />
                     </div>
                     <div className="next-button">
-                      <MdArrowForwardIos 
-                        style={{fontSize: "15px"}} 
-                        onClick={gotoNextSlide} 
+                      <MdArrowForwardIos
+                        style={{ fontSize: "15px" }}
+                        onClick={gotoNextSlide}
                       />
                     </div>
                   </>
@@ -172,49 +179,72 @@ const ListingCard = ({
           <div className="no-photos-placeholder">
             <span>📸 No Photos Available</span>
           </div>
-          
         )}
       </div>
 
-      <h2>{title || 'Untitled Listing'}</h2>
+      {/* Info */}
+      <h2>{title || "Untitled Listing"}</h2>
       <h3>
-        {city || 'Unknown'}, {state || 'Unknown'}, {country || 'Unknown'}
+        {city || "Unknown"}, {state || "Unknown"}, {country || "Unknown"}
       </h3>
-      <p>{category || 'Uncategorized'}</p>
-      {reservation ? (
-        <p>Reserverd by {customerFirstName} {customerLastName}</p> 
-      ) : (
-        <></>
-      )}
+      <p>{category || "Uncategorized"}</p>
 
+      {/* Reservation Info */}
+      {reservation ? (
+        <Link
+          to={`/user/${customerId}`}
+          style={{ textDecoration: "none", color: "inherit" }}
+          onClick={(e) => e.stopPropagation()} // stop card navigation
+        >
+          <div className="reserved-info">
+            <p>
+              Reserved by <strong>{customerFirstName} {customerLastName}</strong>
+            </p>
+          </div>
+        </Link>
+      ) : null}
+
+      {/* Booking Info */}
       {booking ? (
         <>
-          <p>{startDate} - {endDate}</p>
+          <p>
+            {startDate} - {endDate}
+          </p>
           <p>
             <span>₹{totalPrice?.toLocaleString()}</span> total
           </p>
+          {/* cancel booking */}
+          <button 
+            onClick={cancelBooking} 
+            disabled={!user || isDeleting} 
+            className={`cancel-booking-btn ${isDeleting ? 'deleting' : ''}`}
+            title="Cancel booking"
+          >
+            <MdDeleteForever 
+              style={{ 
+                color: isDeleting ? "gray" : "red", 
+                fontSize: "24px" 
+              }} 
+            />
+            {isDeleting && <span className="loading-text">Cancelling...</span>}
+          </button>
         </>
       ) : (
         <>
-          <p>{type || 'Property'}</p>
+          <p>{type || "Property"}</p>
           <p>
             <span>₹{price?.toLocaleString()}</span> per night
           </p>
-          <button 
-            className="favorite" 
-            onClick={patchWishlist} 
+          <button
+            className="favorite"
+            onClick={patchWishlist}
             disabled={!user}
             aria-label={isLiked ? "Remove from wishlist" : "Add to wishlist"}
           >
-            <MdFavorite 
-              style={{
-                color: isLiked ? "red" : "white",
-              }} 
-            />
+            <MdFavorite style={{ color: isLiked ? "red" : "white" }} />
           </button>
         </>
       )}
-      
     </div>
   );
 };

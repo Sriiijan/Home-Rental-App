@@ -17,12 +17,12 @@ const ReservationPage = () => {
     const getReservationList= async () => {
         try {
             if (!hostId) {
-            console.log('No host ID found');
-            setLoading(false);
-            return;
-        }
+                console.log('No host ID found');
+                setLoading(false);
+                return;
+            }
 
-        const response = await axios.get(
+            const response = await axios.get(
                 `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api/v1/booking/${hostId}/reservations`
             );
             const data= response.data.data;
@@ -48,34 +48,39 @@ const ReservationPage = () => {
         <div>
             <h1 className="title-list">Your Reservation List</h1>
             <div className="list">
-                {reservation.map((res) => (
-            <ListingCard
-              key={res._id}
-              listingId={res.listingId?._id}
-              creator={res.hostId?._id}
-              customerFirstName={res.customerId?.firstName}
-              customerLastName={res.customerId?.lastName}
-              title={res.listingId?.title}
-              listingPhotos={res?.listingId?.listingPhotos}
-              city={res.listingId?.city}
-              state={res.listingId?.state}
-              country={res.listingId?.country}
-              category={res.listingId?.category}
-              startDate={new Date(res.startDate).toLocaleDateString("en-GB", {
-                day: "numeric",
-                month: "short",
-                year: "numeric",
-              })}
-              endDate={new Date(res.endDate).toLocaleDateString("en-GB", {
-                day: "numeric",
-                month: "short",
-                year: "numeric",
-              })}
-              totalPrice={res.totalPrice}
-              booking={true}
-              reservation={true}
-            />
-          ))}
+                {reservation.length > 0 ? (
+                    reservation.map((res) => (
+                        <ListingCard
+                        key={res._id}
+                        listingId={res.listingId?._id}
+                        creator={res.hostId?._id}
+                        customerFirstName={res.customerId?.firstName}
+                        customerLastName={res.customerId?.lastName}
+                        customerId={res?.customerId?._id}
+                        title={res.listingId?.title}
+                        listingPhotos={res?.listingId?.listingPhotos}
+                        city={res.listingId?.city}
+                        state={res.listingId?.state}
+                        country={res.listingId?.country}
+                        category={res.listingId?.category}
+                        startDate={new Date(res.startDate).toLocaleDateString("en-GB", {
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                        })}
+                        endDate={new Date(res.endDate).toLocaleDateString("en-GB", {
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                        })}
+                        totalPrice={res.totalPrice}
+                        booking={true}
+                        reservation={true}
+                        />
+                    ))
+                ) : (
+                    <p>Your reservation list is empty</p>
+                )}
             </div>
         </div>
     )

@@ -31,7 +31,9 @@
         img {
           width: 100%;
           height: 100%;
+          object-fit: cover;
           filter: brightness(85%);
+          border-radius: 10px;
         }
 
         .prev-button,
@@ -65,12 +67,19 @@
     }
   }
 
+  h2 {
+    font-size: 20px;
+    margin: 5px 0;
+  }
+
   h3 {
     font-size: 18px;
+    margin: 2px 0;
   }
 
   p {
     font-size: 16px;
+    margin: 2px 0;
   }
 
   span {
@@ -78,6 +87,7 @@
     font-size: 18px;
   }
 
+  /* Wishlist heart */
   .favorite {
     position: absolute;
     right: 20px;
@@ -87,5 +97,45 @@
     cursor: pointer;
     z-index: 999;
     background: none;
+
+    svg {
+      font-size: 24px;
+      transition: transform 0.2s ease;
+    }
+
+    &:hover svg {
+      transform: scale(1.1);
+    }
   }
+
+  /* Cancel booking button */
+ .cancel-booking-btn {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  border: none;
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  z-index: 1000;
+  box-shadow: none;
+  transition: transform 0.2s;
+
+  svg {
+    font-size: 22px;
+    color: red;
+  }
+
+  &:hover {
+    transform: scale(1.1);
+    background: transparent;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
 }
