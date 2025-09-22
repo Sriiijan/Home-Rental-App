@@ -214,7 +214,8 @@ const ListingCard = ({
             <span>₹{totalPrice?.toLocaleString()}</span> total
           </p>
           {/* cancel booking */}
-          <button 
+          {!reservation ? (
+            <button 
             onClick={cancelBooking} 
             disabled={!user || isDeleting} 
             className={`cancel-booking-btn ${isDeleting ? 'deleting' : ''}`}
@@ -228,6 +229,7 @@ const ListingCard = ({
             />
             {isDeleting && <span className="loading-text">Cancelling...</span>}
           </button>
+          ) : (null)}
         </>
       ) : (
         <>

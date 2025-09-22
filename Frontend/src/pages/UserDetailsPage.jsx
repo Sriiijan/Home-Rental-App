@@ -37,60 +37,59 @@ const UserDetailsPage = () => {
   if (error) return <p style={{ color: "red" }}>{error}</p>;
   if (!user) return <p>No user found</p>;
 
-  return loading ? (<Loader />) : (
-    <div style={{ padding: "20px" }}>
-      <h1>Customer Details</h1>
-
+  return (
+    <div style={{ padding: "30px", display: "flex", justifyContent: "center" }}>
       <div
         style={{
-          border: "1px solid #ddd",
-          padding: "15px",
-          borderRadius: "8px",
-          maxWidth: "400px",
-          textAlign: "center",
+          width: "100%",
+          maxWidth: "600px",
+          background: "#fff",
+          borderRadius: "12px",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+          padding: "25px",
         }}
       >
-        {/* Profile Photo */}
-        {user.profileImage ? (
-          <img
-            src={user.profileImage}
-            alt={`${user.firstName} ${user.lastName}`}
-            style={{
-              width: "120px",
-              height: "120px",
-              borderRadius: "50%",
-              objectFit: "cover",
-              marginBottom: "15px",
-            }}
-          />
-        ) : (
-          <div
-            style={{
-              width: "120px",
-              height: "120px",
-              borderRadius: "50%",
-              background: "#ccc",
-              margin: "0 auto 15px auto",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "14px",
-              color: "#555",
-            }}
-          >
-            No Photo
+        {/* Profile Header */}
+        <div style={{ display: "flex", alignItems: "center", gap: "20px", marginBottom: "20px" }}>
+          {user.profileImage ? (
+            <img
+              src={user.profileImage}
+              alt={`${user.firstName} ${user.lastName}`}
+              style={{
+                width: "120px",
+                height: "120px",
+                borderRadius: "50%",
+                objectFit: "cover",
+                border: "3px solid #eee",
+              }}
+            />
+          ) : (
+            <div
+              style={{
+                width: "120px",
+                height: "120px",
+                borderRadius: "50%",
+                background: "#ccc",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "14px",
+                color: "#555",
+              }}
+            >
+              No Photo
+            </div>
+          )}
+
+          <div>
+            <h2 style={{ margin: 0 }}>
+              {user.firstName} {user.lastName}
+            </h2>
+            <p style={{ margin: "5px 0", color: "#555" }}>{user.email}</p>
           </div>
-        )}
+        </div>
 
-        <p>
-          <strong>Name:</strong> {user.firstName} {user.lastName}
-        </p>
-        <p>
-          <strong>Email:</strong> {user.email}
-        </p>
-      </div>
-
-      <button
+        <button
         style={{
           marginTop: "20px",
           padding: "10px 20px",
@@ -104,6 +103,7 @@ const UserDetailsPage = () => {
       >
         Contact User
       </button>
+      </div>
     </div>
   );
 };

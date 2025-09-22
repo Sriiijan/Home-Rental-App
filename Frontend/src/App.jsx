@@ -13,6 +13,7 @@ import Footer from './components/Footer/Footer.jsx';
 import ReservationPage from './pages/ReservationPage.jsx';
 import SearchPage from './pages/SearchPage.jsx';
 import UserDetailsPage from './pages/UserDetailsPage.jsx';
+import MyProfilePagfe from './pages/MyProfilePage.jsx';
 
 function App() {
 
@@ -32,6 +33,7 @@ function App() {
           <Route path='/propertyList' element={<PropertyListPage />} />
           <Route path='/reservationList' element={<ReservationPage />} />
           <Route path='/user/:userId' element={<UserDetailsPage />} />
+          <Route path='/profile' element={<MyProfilePagfe />} />
           {/* <Route path='/cancel/:bookingId' element={< />} /> */}
         </Routes>
         <Footer />

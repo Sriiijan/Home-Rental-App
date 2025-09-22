@@ -32,8 +32,8 @@ const Navbar = () => {
           onChange={(e) => setSearch(e.target.value)}
         />
         <IconButton onClick={() => navigate(`/properties/search/${serach}`)}>
-  <Search sx={{ color: variables.pinkred }} />
-</IconButton>
+          <Search sx={{ color: variables.pinkred }} />
+        </IconButton>
 
       </div>
 
@@ -71,7 +71,8 @@ const Navbar = () => {
 
         {dropdownMenu && user && (
           <div className="navbar_right_accountmenu">
-            <Link to={`/trips`} onClick={() => setDropdownMenu(false)}>Trip List</Link>
+            <Link to={"/profile"} onClick={() => setDropdownMenu(false)}>Profile</Link>
+            <Link to={"/trips"} onClick={() => setDropdownMenu(false)}>Trip List</Link>
             <Link to="/wishlists" onClick={() => setDropdownMenu(false)}>Wish List</Link>
             <Link to="/propertyList" onClick={() => setDropdownMenu(false)}>Property List</Link>
             <Link to="/reservationList" onClick={() => setDropdownMenu(false)}>Reservation List</Link>
