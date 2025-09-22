@@ -1,21 +1,26 @@
 import express from 'express';
 import cors from 'cors';
-// import cookieParser from 'cookie-parser';
-// import morgan from 'morgan';
 
-const app= express()
+const app = express()
 
+// Update CORS for production
 app.use(cors({
-    origin: process.env.CORS_OROGIN || 'http://localhost:5173',
+    origin: [
+        'http://localhost:5173', // Local development
+        'https://your-frontend-vercel-url.vercel.app', // Add your Vercel URL later
+        process.env.CORS_ORIGIN // From environment variable
+    ].filter(Boolean), // Remove any undefined values
     credentials: true,
 }))
 
-// app.use(morgan('dev'))
 app.use(express.json({limit: '16kb'}))
 app.use(express.urlencoded({extended: true, limit: '16kb'}))
 app.use(express.static('public'))
-// app.use(cookieParser())
 
+// Health check endpoint for Render
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'OK', message: 'Server is running' });
+});
 
 // routes import
 import userRouter from "./routes/user.routes.js"

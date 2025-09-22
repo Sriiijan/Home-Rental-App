@@ -2,8 +2,9 @@ import dotenv from "dotenv";
 import connectDB from "./db/index.js";
 import {app} from "./app.js";
 
+// Fix the dotenv path - remove './' 
 dotenv.config({
-    path: './env'
+    path: '.env'  // or just dotenv.config()
 })
 
 connectDB()
@@ -13,8 +14,10 @@ connectDB()
         throw error
     })
 
-    app.listen(process.env.PORT || 8000, () => {
-        console.log(`Server is running at port : ${process.env.PORT || 8000}`);
+    // Render uses PORT environment variable
+    const PORT = process.env.PORT || 8000;
+    app.listen(PORT, '0.0.0.0', () => {
+        console.log(`Server is running at port : ${PORT}`);
     })
 })
 .catch((error)=> {
