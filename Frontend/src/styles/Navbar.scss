@@ -1,4 +1,4 @@
-@import "./Variables.module.scss";
+@use "./Variables.module.scss" as *;
 @import "./Breakpoints.scss";
 
 .navbar {
