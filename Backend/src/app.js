@@ -7,7 +7,7 @@ const app = express()
 app.use(cors({
     origin: [
         'http://localhost:5173', // Local development
-        'https://havenly-rho.vercel.app/', // Add your Vercel URL later
+        'https://havenly-rho.vercel.app', // Add your Vercel URL later
         process.env.CORS_ORIGIN // From environment variable
     ].filter(Boolean), // Remove any undefined values
     credentials: true,
